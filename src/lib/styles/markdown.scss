@@ -1,0 +1,77 @@
+@use 'sass:meta';
+
+.markdown {
+  @include meta.load-css('highlight.js/styles/github');
+
+  @apply text-sm;
+
+  h1 {
+    @apply text-4xl border-b-2 pb-2 border-gray-200;
+  }
+
+  h2 {
+    @apply text-3xl border-b-2 pb-2 border-gray-200;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-xl;
+  }
+
+  h5 {
+    @apply text-lg;
+  }
+
+  h5 {
+    @apply text-base;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold my-2 first:mt-0;
+  }
+
+  hr {
+    @apply my-2 border-gray-200 border-t-4;
+  }
+
+  ul {
+    @apply pl-4 list-disc list-inside;
+  }
+
+  ol {
+    @apply list-decimal list-inside;
+  }
+
+  a {
+    @apply text-blue-600 hover:underline;
+  }
+
+  :not(pre) > code {
+    @apply px-1 bg-gray-100 rounded-sm;
+  }
+
+  pre code {
+    @apply border-2 border-gray-200 border-solid rounded-md my-2 last:mb-0;
+  }
+
+  blockquote {
+    @apply px-4 border-l-4 border-gray-200;
+  }
+
+  p {
+    @apply my-4;
+  }
+
+  th,
+  td {
+    @apply border border-gray-200 p-2;
+  }
+}

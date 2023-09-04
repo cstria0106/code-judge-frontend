@@ -1,0 +1,41 @@
+@mixin default-style($selectors...) {
+  @for $i from 0 to length($selectors) {
+    #{nth($selectors, $i + 1)} {
+      &:not(.markdown *) {
+        &:not(.no-default-styles *) {
+          &:not(.no-default-styles) {
+            &:not(.no-default-#{nth($selectors, $i + 1)}-style *) {
+              &:not(.no-default-#{nth($selectors, $i + 1)}-style) {
+                @content;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include default-style(
+  'input[type="text"]',
+  'input[type="password"]',
+  'textarea'
+) {
+  @apply text-sm border border-solid p-2 border-gray-400 rounded-md;
+
+  &:disabled {
+    @apply bg-gray-100 text-gray-600 border-gray-300;
+  }
+}
+
+@include default-style(button) {
+  @apply text-sm w-full px-5 py-3 bg-slate-600 text-white rounded-md flex flex-row items-center justify-center gap-x-2;
+
+  &:hover {
+    @apply brightness-90;
+  }
+}
+
+@include default-style(label, 'div.label') {
+  @apply text-sm;
+}

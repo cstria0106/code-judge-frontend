@@ -1,0 +1,46 @@
+import type api from '@code-judge/api';
+import { get } from 'svelte/store';
+import { loginToken } from './store';
+import type { WebsocketConnection } from './websocket';
+import { dev } from '$app/environment';
+
+export type User = {
+  id: string;
+  name: string;
+  shouldChangePassword: boolean;
+  role: 'STUDENT' | 'ADMIN';
+};
+
+function addBearerPrefix(token: string | undefined | null) {
+  return token !== undefined && token !== null ? `Bearer ${token}` : undefined;
+}
+
+export function getConnection(noAuthorization?: boolean): api.IConnection {
+  const host = dev
+    ? 'http://localhost:3000'
+    : 'https://api.codejudge.miruku.dog';
+  const token = get(loginToken);
+  return {
+    host,
+    headers: {
+      ...(noAuthorization === false
+        ? undefined
+        : { Authorization: addBearerPrefix(token) }),
+    },
+  };
+}
+
+export function getWebsocketConnection(
+  noAuthorization?: boolean,
+): WebsocketConnection {
+  const host = dev ? 'ws://localhost:3000' : 'wss://api.codejudge.miruku.dog';
+  const token = get(loginToken);
+  return {
+    host,
+    ...(noAuthorization === false
+      ? undefined
+      : {
+          authorization: { token: addBearerPrefix(token) },
+        }),
+  };
+}
