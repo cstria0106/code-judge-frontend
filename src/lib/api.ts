@@ -15,7 +15,7 @@ function addBearerPrefix(token: string | undefined | null) {
   return token !== undefined && token !== null ? `Bearer ${token}` : undefined;
 }
 
-export function getConnection(noAuthorization?: boolean): api.IConnection {
+export function getConnection(noAuthorization?: boolean) {
   const host = dev
     ? 'http://localhost:3000'
     : 'https://api.codejudge.miruku.dog';
@@ -27,7 +27,7 @@ export function getConnection(noAuthorization?: boolean): api.IConnection {
         ? undefined
         : { Authorization: addBearerPrefix(token) }),
     },
-  };
+  } as const satisfies api.IConnection;
 }
 
 export function getWebsocketConnection(
