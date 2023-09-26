@@ -5,6 +5,14 @@
   import Box from '$lib/components/layouts/Box.svelte';
   import { resolveErrorMessage } from '$lib/error';
   import api, { HttpError } from '@code-judge/api';
+  import {
+    Button,
+    ButtonSet,
+    Form,
+    FormGroup,
+    PasswordInput,
+    TextInput,
+  } from 'carbon-components-svelte';
   import toast from 'svelte-french-toast';
 
   let newPassword = '';
@@ -40,21 +48,19 @@
 
 <UserOnly let:user>
   {#if user}
-    <Box>
-      <BoxTitle>Edit User Information</BoxTitle>
-      <div
-        class="w-full grid grid-cols-[auto_1fr] items-center gap-4 [&>div]:text-sm"
-      >
-        <div>ID</div>
-        <input type="text" value={user.id} disabled />
-        <div>Name</div>
-        <input type="text" value={user.name} disabled />
-        <div>New password</div>
-        <input type="password" bind:value={newPassword} />
-        <div>New password (again)</div>
-        <input type="password" bind:value={newPasswordAgain} />
-        <button class="col-span-2" on:click={save}> Save </button>
-      </div>
-    </Box>
+    <Form class="flex flex-col gap-y-4">
+      <TextInput labelText="ID" value={user.id} readonly />
+      <TextInput labelText="Name" value={user.name} readonly />
+      <PasswordInput
+        labelText="New password"
+        helperText="Password must be at least 8 characters long"
+        bind:value={newPassword}
+      />
+      <PasswordInput
+        labelText="New password (again)"
+        bind:value={newPasswordAgain}
+      />
+      <Button on:click={save}>Save</Button>
+    </Form>
   {/if}
 </UserOnly>

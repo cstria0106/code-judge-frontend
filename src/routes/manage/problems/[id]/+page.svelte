@@ -22,6 +22,22 @@
   import CodeEditor from '$lib/components/CodeEditor.svelte';
   import { languageNames, type Language, languages } from '$lib/language';
   import LanguageSelector from '$lib/components/LanguageSelector.svelte';
+  import {
+    Button,
+    ButtonSet,
+    Column,
+    FileUploader,
+    FileUploaderButton,
+    FormLabel,
+    InlineLoading,
+    Loading,
+    NumberInput,
+    Row,
+    TextInput,
+  } from 'carbon-components-svelte';
+  import { Save, TrashCan } from 'carbon-icons-svelte';
+  import { loginToken } from '../../../../lib/store';
+  import toast from 'svelte-french-toast';
 
   const id = get(page).params.id;
 
@@ -31,7 +47,6 @@
 
   problem.then((problem) => {
     let cloned = _.cloneDeep(problem);
-    originalProblem = cloned;
     cloned = _.cloneDeep(problem);
     editingProblem = {
       ...cloned,
@@ -39,11 +54,12 @@
       startTime: cloned.startTime !== null ? new Date(cloned.startTime) : null,
       endTime: cloned.endTime !== null ? new Date(cloned.endTime) : null,
       description: cloned.description,
+      timeLimit: cloned.timeLimit,
+      memoryLimit: cloned.memoryLimit / 1000,
     };
   });
 
   type Problem = api.functional.problem.manage.manageGet.Output['problem'];
-  let originalProblem: Problem;
   let editingProblem: {
     id: bigint;
     name: string;
@@ -52,6 +68,8 @@
     description: string;
     artifacts: Problem['artifacts'];
     templates: Problem['templates'];
+    memoryLimit: number;
+    timeLimit: number;
   };
 
   const marked = new Marked(
@@ -65,28 +83,47 @@
   );
 
   async function save() {
+    const {
+      name,
+      description,
+      startTime,
+      endTime,
+      templates,
+      artifacts,
+      memoryLimit,
+      timeLimit,
+    } = editingProblem;
+
     await api.functional.problem.manage.manageUpdate(getConnection(), id, {
-      name: editingProblem.name,
-      description: editingProblem.description,
+      name,
+      description,
       startTime:
-        editingProblem.startTime !== undefined &&
-        editingProblem.startTime !== null
-          ? editingProblem.startTime.toString()
-          : editingProblem.startTime,
+        startTime !== undefined && startTime !== null
+          ? startTime.toString()
+          : startTime,
       endTime:
-        editingProblem.endTime !== undefined && editingProblem.endTime !== null
-          ? editingProblem.endTime.toString()
-          : editingProblem.endTime,
-      templates: editingProblem.templates,
+        endTime !== undefined && endTime !== null
+          ? endTime.toString()
+          : endTime,
+      templates,
       artifacts: {
         inputs: {
-          public: editingProblem.artifacts.inputs.public,
-          hidden: editingProblem.artifacts.inputs.hidden,
+          public:
+            (artifacts.inputs.public?.length ?? 0) > 0
+              ? artifacts.inputs.public
+              : null,
+          hidden:
+            (artifacts.inputs.hidden?.length ?? 0) > 0
+              ? artifacts.inputs.hidden
+              : null,
         },
       },
+      timeLimit,
+      memoryLimit: memoryLimit * 1000,
     });
 
     history.back();
+    toast.success('Successfully saved.');
   }
 
   async function destroy() {
@@ -103,181 +140,198 @@
     }
   }
 
-  function downloadInput(type: 'public' | 'hidden') {
-    // downloadBase64(
-    //   originalProblem.artifacts.inputs[type],
-    //   `${originalProblem.name}-input-${type}.bin`,
-    // );
+  async function removeInput(type: 'public' | 'hidden') {
+    if (
+      confirm(
+        'Are you sure to remove this input file? You can not revert this action.',
+      )
+    ) {
+      editingProblem.artifacts.inputs[type] = null;
+    }
   }
 
-  let fileInput: HTMLInputElement;
-
-  async function openFiles(): Promise<File[]> {
-    return new Promise((resolve, reject) => {
-      const onChange = () => {
-        fileInput.removeEventListener('change', onChange);
-        fileInput.removeEventListener('cancel', onCancel);
-        if (fileInput.files === undefined) return reject();
-        if (fileInput.files === null) return reject();
-        resolve([...fileInput.files]);
-      };
-
-      const onCancel = () => {
-        fileInput.removeEventListener('change', onChange);
-        fileInput.removeEventListener('cancel', onCancel);
-        resolve([]);
-      };
-      fileInput.addEventListener('change', onChange);
-      fileInput.addEventListener('cancel', onCancel);
-      fileInput.click();
-    });
-  }
-
-  async function uploadArtifact(type: 'public' | 'hidden') {
-    const files = await openFiles();
-    if (files.length === 0) return;
-
-    const file = files[0];
+  async function uploadInput(type: 'public' | 'hidden', file: File) {
+    // Upload file
     const connection = getConnection();
+    const token = get(loginToken);
+    if (token === null) return;
 
     const formData = new FormData();
     formData.append('file', file);
 
     const response = await fetch(`${connection.host}/storage`, {
-      headers: connection.headers,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       method: 'POST',
       body: formData,
     });
 
+    // Set file id
     if (response.status === 201) {
       const body = (await response.json()) as { id: string };
       editingProblem.artifacts.inputs[type] = body.id;
+      toast.success('Successfully uploaded.');
+    } else {
+      toast.error('Failed to upload.');
     }
-  }
-
-  function cancelUploadArtifact(type: 'public' | 'hidden') {
-    editingProblem.artifacts.inputs[type] =
-      originalProblem.artifacts.inputs[type];
   }
 
   let editingJudgeCodeLanguage: Language = 'C';
   let editingProblemCodeLanguage: Language = 'C';
 </script>
 
-<input type="file" bind:this={fileInput} hidden />
-
-{#await problem then}
-  <Orientation vertical>
-    <Orientation horizontal>
-      <Box class="w-[600px]">
+{#await problem}
+  <InlineLoading />
+{:then problem}
+  <Column>
+    <Row>
+      <Column class="flex flex-col gap-y-4">
+        <TextInput labelText="Name" bind:value={editingProblem.name} />
+        <div>
+          <FormLabel for="start-time">Start time</FormLabel>
+          <DateInput
+            bind:value={editingProblem.startTime}
+            placeholder="Draft"
+          />
+        </div>
+        <div>
+          <FormLabel for="end-time">End time</FormLabel>
+          <DateInput
+            bind:value={editingProblem.endTime}
+            placeholder="Permanent"
+          />
+        </div>
+        <Row>
+          <Column class="flex-grow-0">
+            <NumberInput
+              bind:value={editingProblem.timeLimit}
+              hideSteppers
+              label="Time Limit (milliseconds)"
+            />
+          </Column>
+          <Column class="flex-grow-0">
+            <NumberInput
+              bind:value={editingProblem.memoryLimit}
+              hideSteppers
+              label="Memory Limit (kilobytes)"
+            />
+            <FormLabel class="mt-1">
+              {filesize(editingProblem.memoryLimit)}
+            </FormLabel>
+          </Column>
+        </Row>
+        <Row class="mb-4">
+          <Column class="flex-grow-0">
+            <FormLabel for="public-input">Public Input</FormLabel>
+            {#if editingProblem.artifacts.inputs.public === null}
+              <FileUploaderButton
+                on:change={({ detail }) => {
+                  uploadInput('public', detail[0]);
+                }}
+                labelText="Upload"
+              />
+            {:else}
+              <Button
+                kind="danger"
+                size="small"
+                on:click={() => {
+                  removeInput('public');
+                }}
+              >
+                Remove
+              </Button>
+            {/if}
+          </Column>
+          <Column class="flex-grow-0">
+            <FormLabel for="hidden-input">Hidden Input</FormLabel>
+            {#if editingProblem.artifacts.inputs.hidden === null}
+              <FileUploaderButton
+                on:change={({ detail }) => {
+                  uploadInput('hidden', detail[0]);
+                }}
+                labelText="Upload"
+              />
+            {:else}
+              <Button
+                kind="danger"
+                size="small"
+                on:click={() => {
+                  removeInput('hidden');
+                }}
+              >
+                Remove
+              </Button>
+            {/if}
+          </Column>
+        </Row>
+      </Column>
+    </Row>
+    <Row class="mb-4">
+      <Column>
         <LanguageSelector
+          labelText="Select Judge Template Language"
           bind:language={editingJudgeCodeLanguage}
           {languages}
         />
         <CodeEditor
-          title="Judge"
+          title="Judge Template"
           language={editingJudgeCodeLanguage}
           bind:code={editingProblem.templates.judge[editingJudgeCodeLanguage]}
         />
-      </Box>
-
-      <Box class="w-[600px]">
+      </Column>
+      <Column>
         <LanguageSelector
+          labelText="Select Solution Template Language"
           bind:language={editingProblemCodeLanguage}
           {languages}
         />
         <CodeEditor
-          title="Solution template"
+          title="Solution Template"
           language={editingProblemCodeLanguage}
           bind:code={editingProblem.templates.solution[
             editingProblemCodeLanguage
           ]}
         />
-      </Box>
-    </Orientation>
-    <Orientation horizontal>
-      <Box class="w-[600px] p-4 overflow-x-scroll whitespace-nowrap">
-        <div class="markdown">
-          {@html marked.parse(editingProblem.description)}
-        </div>
-      </Box>
-      <Box class="w-[600px]">
-        <BoxTitle>Edit {originalProblem.name}</BoxTitle>
-        <div class="grid grid-cols-[auto_1fr] items-center gap-4">
-          <label for="name">Name</label>
-          <input id="name" type="text" bind:value={editingProblem.name} />
-          <label for="start-time">Start time</label>
-          <div class="no-default-button-style">
-            <DateInput
-              bind:value={editingProblem.startTime}
-              placeholder="Draft"
+      </Column>
+    </Row>
+    <Row class="mb-4">
+      <Column>
+        <FormLabel>Description</FormLabel>
+        <Row>
+          <Column>
+            <CodeMirror
+              lang={markdown()}
+              value={editingProblem.description}
+              on:change={(e) => {
+                editingProblem.description = e.detail;
+              }}
+              theme={githubLight}
+              lineWrapping={true}
             />
-          </div>
-          <label for="end-time">End time</label>
-          <div class="no-default-button-style">
-            <DateInput
-              bind:value={editingProblem.endTime}
-              placeholder="Permanent"
-            />
-          </div>
-          <div class="label">Public input file</div>
-          <div class="grid grid-cols-[auto_1fr] items-center gap-x-2">
-            {#if editingProblem.artifacts.inputs.public === originalProblem.artifacts.inputs.public}
-              <button on:click={() => uploadArtifact('public')}>Upload</button>
-              {#if editingProblem.artifacts.inputs.public !== null}
-                <button on:click={() => downloadInput('public')}>
-                  Download
-                </button>
-              {/if}
-            {:else}
-              <button
-                class="col-span-2"
-                on:click={() => cancelUploadArtifact('public')}
-              >
-                Cancel
-              </button>
-            {/if}
-          </div>
-          <div class="label">Hidden input file</div>
-          <div class="grid grid-cols-[auto_1fr] items-center gap-x-2">
-            {#if editingProblem.artifacts.inputs.hidden === originalProblem.artifacts.inputs.hidden}
-              <button on:click={() => uploadArtifact('hidden')}>Upload</button>
-              {#if editingProblem.artifacts.inputs.hidden !== null}
-                <button on:click={() => downloadInput('hidden')}>
-                  Download
-                </button>
-              {/if}
-            {:else}
-              <button
-                class="col-span-2"
-                on:click={() => cancelUploadArtifact('hidden')}
-              >
-                Cancel
-              </button>
-            {/if}
-          </div>
-        </div>
-        <BoxTitle>Description (Markdown)</BoxTitle>
-        <div class="no-default-styles">
-          <CodeMirror
-            lang={markdown()}
-            value={editingProblem.description}
-            on:change={(e) => {
-              editingProblem.description = e.detail;
-            }}
-            theme={githubLight}
-            lineWrapping={true}
-          />
-        </div>
-        <div class="flex flex-row mt-4 gap-x-2">
-          <button on:click={save}>Save</button>
-          <button class="w-auto bg-red-600" on:click={destroy}>
-            <Fa icon={faTrashAlt} /> Destroy
-          </button>
-        </div>
-      </Box>
-    </Orientation>
-  </Orientation>
+          </Column>
+
+          <Column>
+            <div
+              class="markdown border border-gray-300 border-solid p-4 rounded-lg"
+            >
+              {@html marked.parse(editingProblem.description)}
+            </div>
+          </Column>
+        </Row>
+      </Column>
+    </Row>
+    <Row class="mt-[350px]">
+      <Column>
+        <ButtonSet class="justify-end">
+          <Button kind="danger" on:click={destroy} icon={TrashCan}
+            >Destroy
+          </Button>
+          <Button kind="primary" on:click={save} icon={Save}>Save</Button>
+        </ButtonSet>
+      </Column>
+    </Row>
+  </Column>
 {/await}
 
 <style lang="scss" scoped>

@@ -17,6 +17,7 @@
   import type { Language } from '$lib/language';
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
+  import { Button, CodeSnippet, Column, Row } from 'carbon-components-svelte';
 
   const id = $page.params.id;
 
@@ -59,27 +60,26 @@
 </script>
 
 <UserOnly>
-  <Box>
-    <BoxTitle>Submits</BoxTitle>
+  <Column>
     {#if submit !== undefined}
       <SubmitTable submits={[submit]} />
-      <div class="mt-4">
-        <div>Code</div>
-        <CodeEditor language={submit.language} bind:code />
-        <div class="mt-4 text-right">
-          <button class="inline-block w-auto" on:click={submitAgain}>
-            Submit
-          </button>
-        </div>
-      </div>
+      <h5>Code</h5>
+      <CodeEditor language={submit.language} bind:code />
+      <Row class="my-4">
+        <Column class="flex flex-row justify-end">
+          <Button on:click={submitAgain}>Submit</Button>
+        </Column>
+      </Row>
       {#if submit.status.type === 'COMPLETE' && submit.status.result.type === 'COMPILE_ERROR'}
-        <div class="mt-4">
-          <div class="mb-2">Compiler message</div>
-          <pre
-            class="text-xs border border-gray-200 rounded-sm p-4 overflow-scroll">{submit
-              .status.result.message}</pre>
+        <h5 class="mb-4">Compiler message</h5>
+        <div class="[&>div]:max-w-none">
+          <CodeSnippet
+            id="snippet"
+            code={submit.status.result.message}
+            type="multi"
+          />
         </div>
       {/if}
     {/if}
-  </Box>
+  </Column>
 </UserOnly>

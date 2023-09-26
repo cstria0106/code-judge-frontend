@@ -4,6 +4,7 @@
   import BoxTitle from './BoxTitle.svelte';
   import CodeMirror from 'svelte-codemirror-editor';
   import type { Language } from '$lib/language';
+  import { FormLabel } from 'carbon-components-svelte';
 
   export let code: string | undefined;
 
@@ -25,9 +26,8 @@
   export let readonly: boolean = false;
 </script>
 
-<BoxTitle>{title}</BoxTitle>
-<div class="flex flex-row gap-x-4" />
-<div class="no-default-styles">
+<FormLabel class="mt-2">{title}</FormLabel>
+<div class="border border-solid border-gray-200 rounded-md">
   <CodeMirror
     lang={getCodeMirrorLanguage(language)}
     value={code}

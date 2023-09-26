@@ -6,6 +6,13 @@
   import { resolveErrorMessage } from '$lib/error';
   import { loginToken } from '$lib/store';
   import api, { HttpError } from '@code-judge/api';
+  import {
+    Button,
+    Column,
+    Form,
+    PasswordInput,
+    TextInput,
+  } from 'carbon-components-svelte';
   import toast from 'svelte-french-toast';
 
   let id: string = '';
@@ -33,10 +40,12 @@
   }
 </script>
 
-<Box>
-  <div class="flex flex-col justify-center gap-y-4">
-    <input bind:value={id} type="text" placeholder="ID" />
-    <input bind:value={password} type="password" placeholder="Password" />
-    <button on:click={login} type="button">Sign In</button>
-  </div>
-</Box>
+<Column>
+  <Form class="flex flex-col gap-y-4">
+    <TextInput labelText="ID" bind:value={id} />
+    <PasswordInput labelText="Password" bind:value={password} />
+    <div class="flex flex-col items-end">
+      <Button class="flex" on:click={login}>Login</Button>
+    </div>
+  </Form>
+</Column>

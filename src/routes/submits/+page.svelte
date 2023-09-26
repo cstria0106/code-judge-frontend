@@ -13,6 +13,7 @@
   import { match } from 'ts-pattern';
   import SubmitTable from './SubmitTable.svelte';
   import { onMount } from 'svelte';
+  import { Column } from 'carbon-components-svelte';
 
   let skip = 0;
 
@@ -44,10 +45,10 @@
 </script>
 
 <UserOnly>
-  <Box>
-    <BoxTitle>Submits</BoxTitle>
+  <Column>
+    <h4 class="mb-4">Submits</h4>
     {#if submits !== undefined}
       <SubmitTable {submits} />
     {/if}
-  </Box>
+  </Column>
 </UserOnly>

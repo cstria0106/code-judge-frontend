@@ -19,15 +19,18 @@
   import Problems from '$lib/components/Problems.svelte';
   import Orientation from '$lib/components/layouts/Orientation.svelte';
   import { base } from '$app/paths';
+  import {
+    Button,
+    ButtonSet,
+    Column,
+    Row,
+    ToastNotification,
+  } from 'carbon-components-svelte';
+  import { WarningAltFilled } from 'carbon-icons-svelte';
 
   const problems = api.functional.problem
     .list(getConnection(), {})
     .then((response) => response.problems);
-
-  function logout() {
-    loginToken.set(null);
-    reloadApp();
-  }
 </script>
 
 <FetchUser force />
@@ -35,91 +38,34 @@
 <UserOnly let:user>
   <!-- slot null check가 자동으로 안돼서 임시로 넣어야 함 -->
   {#if user !== null}
-    <Orientation vertical>
-      <Box class="text-sm">
-        <BoxTitle>
-          <Fa icon={faUser} /> User Information
-        </BoxTitle>
-        <div class="grid grid-cols-[1fr_auto] [&>.text]:text-right gap-y-2">
-          <div>ID</div>
-          <div class="text">{user.id}</div>
-          <div>Name</div>
-          <div class="text">{user.name}</div>
-        </div>
-
-        <button
-          class="mt-4"
-          on:click={() => {
-            goto(`${base}/my/edit`);
-          }}
-        >
-          <Fa icon={faEdit} />
-          Edit
-        </button>
-        <button class="mt-2" on:click={logout}>
-          <Fa icon={faRightFromBracket} />
-          Sign Out
-        </button>
-      </Box>
+    <Column>
       {#if user.shouldChangePassword}
-        <Box>
-          <BoxTitle>
-            <Fa icon={faTriangleExclamation} /> Alert
-          </BoxTitle>
-          Please change your password before use!
-        </Box>
+        <ToastNotification
+          fullWidth
+          kind="error"
+          title="Please change your password before use!"
+          caption={new Date().toLocaleString()}
+        />
       {:else}
-        <Box>
-          <BoxTitle>
-            <Fa icon={faClipboardQuestion} /> Active Problems
-          </BoxTitle>
+        <h4 class="mb-4">Problems</h4>
+        <Problems
+          pages={[problems]}
+          on:clickProblem={(e) => goto(`${base}/problems/${e.detail.id}`)}
+        />
 
-          <div
-            class="h-[400px] overflow-y-scroll border border-gray-300 p-4 rounded-md"
-          >
-            <Problems
-              pages={[problems]}
-              on:clickProblem={(e) => goto(`${base}/problems/${e.detail.id}`)}
-            />
-          </div>
+        <a class="block text-right mb-4" href="{base}/problems">
+          See all past problems
+        </a>
 
-          <a class="block text-right mt-2 text-blue-600" href="{base}/problems">
-            See all past problems
-          </a>
-        </Box>
+        {#if user.role === 'ADMIN'}
+          <h4 class="mb-4">Manage</h4>
+          <ButtonSet>
+            <Button href={`${base}/manage/problems`}>Problems</Button>
+            <Button href={`${base}/manage/users`}>Users</Button>
+            <Button href={`${base}/manage/submits`}>Submits</Button>
+          </ButtonSet>
+        {/if}
       {/if}
-
-      {#if user.role === 'ADMIN'}
-        <Box>
-          <BoxTitle>Admin Panel</BoxTitle>
-          <div class="flex flex-row flex-wrap gap-2">
-            <span>
-              <button
-                type="button"
-                on:click={() => goto(`${base}/manage/problems`)}
-              >
-                Manage problems</button
-              >
-            </span>
-            <span>
-              <button
-                type="button"
-                on:click={() => goto(`${base}/manage/users`)}
-              >
-                Manage users
-              </button>
-            </span>
-            <span>
-              <button
-                type="button"
-                on:click={() => goto(`${base}/manage/submits`)}
-              >
-                Manage submits
-              </button>
-            </span>
-          </div>
-        </Box>
-      {/if}</Orientation
-    >
+    </Column>
   {/if}
 </UserOnly>

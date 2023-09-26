@@ -3,40 +3,7 @@
 .markdown {
   @include meta.load-css('highlight.js/styles/github');
 
-  @apply text-sm;
-
-  h1 {
-    @apply text-4xl border-b-2 pb-2 border-gray-200;
-  }
-
-  h2 {
-    @apply text-3xl border-b-2 pb-2 border-gray-200;
-  }
-
-  h3 {
-    @apply text-2xl;
-  }
-
-  h4 {
-    @apply text-xl;
-  }
-
-  h5 {
-    @apply text-lg;
-  }
-
-  h5 {
-    @apply text-base;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-bold my-2 first:mt-0;
-  }
+  @apply text-sm border border-solid border-gray-200 rounded-md p-6;
 
   hr {
     @apply my-2 border-gray-200 border-t-4;

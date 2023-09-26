@@ -33,13 +33,11 @@
 </script>
 
 <UserOnly>
-  <Box>
-    <BoxTitle>All Problems</BoxTitle>
-    <Problems
-      pages={problemsEntries}
-      paging
-      on:loadMore={(e) => onLoadMore(e.detail)}
-      on:clickProblem={(e) => goto(`${base}/problems/${e.detail.id}`)}
-    />
-  </Box>
+  <h2 class="mb-4">All Problems</h2>
+  <Problems
+    pages={problemsEntries}
+    paging
+    on:loadMore={(e) => onLoadMore(e.detail)}
+    on:clickProblem={(e) => goto(`${base}/problems/${e.detail.id}`)}
+  />
 </UserOnly>
