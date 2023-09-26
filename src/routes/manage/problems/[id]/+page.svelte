@@ -22,6 +22,18 @@
   import CodeEditor from '$lib/components/CodeEditor.svelte';
   import { languageNames, type Language, languages } from '$lib/language';
   import LanguageSelector from '$lib/components/LanguageSelector.svelte';
+  import {
+    Button,
+    ButtonSet,
+    Column,
+    FileUploader,
+    FormLabel,
+    InlineLoading,
+    Loading,
+    Row,
+    TextInput,
+  } from 'carbon-components-svelte';
+  import { Save, TrashCan } from 'carbon-icons-svelte';
 
   const id = get(page).params.id;
 
@@ -80,8 +92,14 @@
       templates: editingProblem.templates,
       artifacts: {
         inputs: {
-          public: editingProblem.artifacts.inputs.public,
-          hidden: editingProblem.artifacts.inputs.hidden,
+          public:
+            (editingProblem.artifacts.inputs.public?.length ?? 0) > 0
+              ? editingProblem.artifacts.inputs.public
+              : null,
+          hidden:
+            (editingProblem.artifacts.inputs.hidden?.length ?? 0) > 0
+              ? editingProblem.artifacts.inputs.hidden
+              : null,
         },
       },
     });
@@ -166,118 +184,106 @@
 
 <input type="file" bind:this={fileInput} hidden />
 
-{#await problem then}
-  <Orientation vertical>
-    <Orientation horizontal>
-      <Box class="w-[600px]">
+{#await problem}
+  <InlineLoading />
+{:then problem}
+  <Column>
+    <Row>
+      <Column class="flex flex-col gap-y-4">
+        <TextInput labelText="Name" bind:value={editingProblem.name} />
+        <div>
+          <FormLabel for="start-time">Start time</FormLabel>
+          <DateInput
+            bind:value={editingProblem.startTime}
+            placeholder="Draft"
+          />
+        </div>
+        <div>
+          <FormLabel for="end-time">End time</FormLabel>
+          <DateInput
+            bind:value={editingProblem.endTime}
+            placeholder="Permanent"
+          />
+        </div>
+        <Row>
+          <Column class="flex-grow-0">
+            <FormLabel for="public-input">Public Input</FormLabel>
+            <FileUploader on:change={({ detail }) => {}} buttonLabel="Upload"
+              >Upload</FileUploader
+            >
+          </Column>
+          <Column class="flex-grow-0">
+            <FormLabel for="hidden-input">Hidden Input</FormLabel>
+            <FileUploader on:change={({ detail }) => {}} buttonLabel="Upload" />
+          </Column>
+        </Row>
+      </Column>
+    </Row>
+    <Row class="mb-4">
+      <Column>
         <LanguageSelector
+          labelText="Select Judge Template Language"
           bind:language={editingJudgeCodeLanguage}
           {languages}
         />
         <CodeEditor
-          title="Judge"
+          title="Judge Template"
           language={editingJudgeCodeLanguage}
           bind:code={editingProblem.templates.judge[editingJudgeCodeLanguage]}
         />
-      </Box>
-
-      <Box class="w-[600px]">
+      </Column>
+      <Column>
         <LanguageSelector
+          labelText="Select Solution Template Language"
           bind:language={editingProblemCodeLanguage}
           {languages}
         />
         <CodeEditor
-          title="Solution template"
+          title="Solution Template"
           language={editingProblemCodeLanguage}
           bind:code={editingProblem.templates.solution[
             editingProblemCodeLanguage
           ]}
         />
-      </Box>
-    </Orientation>
-    <Orientation horizontal>
-      <Box class="w-[600px] p-4 overflow-x-scroll whitespace-nowrap">
-        <div class="markdown">
-          {@html marked.parse(editingProblem.description)}
-        </div>
-      </Box>
-      <Box class="w-[600px]">
-        <BoxTitle>Edit {originalProblem.name}</BoxTitle>
-        <div class="grid grid-cols-[auto_1fr] items-center gap-4">
-          <label for="name">Name</label>
-          <input id="name" type="text" bind:value={editingProblem.name} />
-          <label for="start-time">Start time</label>
-          <div class="no-default-button-style">
-            <DateInput
-              bind:value={editingProblem.startTime}
-              placeholder="Draft"
+      </Column>
+    </Row>
+    <Row class="mb-4">
+      <Column>
+        <FormLabel>Description</FormLabel>
+        <Row>
+          <Column>
+            <CodeMirror
+              lang={markdown()}
+              value={editingProblem.description}
+              on:change={(e) => {
+                editingProblem.description = e.detail;
+              }}
+              theme={githubLight}
+              lineWrapping={true}
             />
-          </div>
-          <label for="end-time">End time</label>
-          <div class="no-default-button-style">
-            <DateInput
-              bind:value={editingProblem.endTime}
-              placeholder="Permanent"
-            />
-          </div>
-          <div class="label">Public input file</div>
-          <div class="grid grid-cols-[auto_1fr] items-center gap-x-2">
-            {#if editingProblem.artifacts.inputs.public === originalProblem.artifacts.inputs.public}
-              <button on:click={() => uploadArtifact('public')}>Upload</button>
-              {#if editingProblem.artifacts.inputs.public !== null}
-                <button on:click={() => downloadInput('public')}>
-                  Download
-                </button>
-              {/if}
-            {:else}
-              <button
-                class="col-span-2"
-                on:click={() => cancelUploadArtifact('public')}
-              >
-                Cancel
-              </button>
-            {/if}
-          </div>
-          <div class="label">Hidden input file</div>
-          <div class="grid grid-cols-[auto_1fr] items-center gap-x-2">
-            {#if editingProblem.artifacts.inputs.hidden === originalProblem.artifacts.inputs.hidden}
-              <button on:click={() => uploadArtifact('hidden')}>Upload</button>
-              {#if editingProblem.artifacts.inputs.hidden !== null}
-                <button on:click={() => downloadInput('hidden')}>
-                  Download
-                </button>
-              {/if}
-            {:else}
-              <button
-                class="col-span-2"
-                on:click={() => cancelUploadArtifact('hidden')}
-              >
-                Cancel
-              </button>
-            {/if}
-          </div>
-        </div>
-        <BoxTitle>Description (Markdown)</BoxTitle>
-        <div class="no-default-styles">
-          <CodeMirror
-            lang={markdown()}
-            value={editingProblem.description}
-            on:change={(e) => {
-              editingProblem.description = e.detail;
-            }}
-            theme={githubLight}
-            lineWrapping={true}
-          />
-        </div>
-        <div class="flex flex-row mt-4 gap-x-2">
-          <button on:click={save}>Save</button>
-          <button class="w-auto bg-red-600" on:click={destroy}>
-            <Fa icon={faTrashAlt} /> Destroy
-          </button>
-        </div>
-      </Box>
-    </Orientation>
-  </Orientation>
+          </Column>
+
+          <Column>
+            <div
+              class="markdown border border-gray-300 border-solid p-4 rounded-lg"
+            >
+              {@html marked.parse(editingProblem.description)}
+            </div>
+          </Column>
+        </Row>
+      </Column>
+    </Row>
+    <Row>
+      <Column>
+        <ButtonSet class="justify-end">
+          <Button kind="danger" on:click={destroy} icon={TrashCan}
+            >Destroy
+          </Button>
+          <Button kind="primary" on:click={save} icon={Save}>Save</Button>
+        </ButtonSet>
+      </Column>
+    </Row>
+  </Column>
 {/await}
 
 <style lang="scss" scoped>

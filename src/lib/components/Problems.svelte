@@ -4,6 +4,15 @@
   import { BarsRotateFade } from 'svelte-svg-spinners';
   import moment from 'moment';
   import { isAfter, isBefore } from '$lib/utils/date';
+  import {
+    Button,
+    InlineLoading,
+    StructuredList,
+    StructuredListBody,
+    StructuredListCell,
+    StructuredListHead,
+    StructuredListRow,
+  } from 'carbon-components-svelte';
 
   export let pages: Promise<
     api.functional.problem.list.Output['problems'][number][]
@@ -13,15 +22,20 @@
 
   let empty: boolean = false;
   let noMore: boolean = false;
+  let lastProblemId: string | null;
 
   $: pages,
     (() => {
       pages.length > 0 &&
         pages[0].then((problems) => (empty = problems.length === 0));
       pages.length > 0 &&
-        pages[pages.length - 1].then(
-          (problems) => (noMore = problems.length === 0),
-        );
+        pages[pages.length - 1].then((problems) => {
+          if (problems.length > 0) {
+            lastProblemId = problems[problems.length - 1].id;
+          } else {
+            noMore = true;
+          }
+        });
     })();
 
   const dispatch = createEventDispatcher<{
@@ -37,63 +51,66 @@
   const now = moment();
 </script>
 
-<div class="min-h-[48px]">
-  {#if empty}
-    <div class="text-sm text-gray-500">Nothing...</div>
-  {:else}
-    <ul class="flex flex-col gap-y-4">
-      {#each pages as problems, i}
+{#if empty}
+  <div>No items</div>
+{:else}
+  <StructuredList class="mb-5">
+    <StructuredListHead>
+      <StructuredListRow head>
+        <StructuredListCell head>ID</StructuredListCell>
+        <StructuredListCell head>Name</StructuredListCell>
+        <StructuredListCell head>Term</StructuredListCell>
+      </StructuredListRow>
+    </StructuredListHead>
+    <StructuredListBody>
+      {#each pages as problems}
         {#await problems}
-          <BarsRotateFade size={32} color="#333" />
+          <InlineLoading />
         {:then problems}
           {#each problems as problem}
-            <li>
-              <button
-                type="button"
-                on:click={() => {
-                  dispatch('clickProblem', problem);
-                }}
-                class={`bg-gray-100 text-black border border-solid border-gray-300`}
-              >
-                <div
-                  class="bg-slate-800 bg-opacity-50 text-white px-1 py-0.5 rounded-md text-xs"
-                >
-                  {#if problem.startTime !== null && problem.endTime !== null}
-                    <!-- If it's already end -->
-                    {#if isBefore(problem.endTime, now)}
-                      End
-                    {:else}
-                      <!-- If it's not started -->
-                      {#if isAfter(problem.startTime, now)}
-                        {formatDate(problem.startTime)}
-                      {/if}
-                      ~ {formatDate(problem.endTime)}
-                    {/if}
-                  {:else if problem.startTime !== null}
-                    Permanent
+            <StructuredListRow
+              class="cursor-pointer hover:bg-gray-50"
+              on:click={() => {
+                dispatch('clickProblem', problem);
+              }}
+            >
+              <StructuredListCell>{problem.id}</StructuredListCell>
+              <StructuredListCell>{problem.name}</StructuredListCell>
+              <StructuredListCell>
+                {#if problem.startTime !== null && problem.endTime !== null}
+                  <!-- If it's already end -->
+                  {#if isBefore(problem.endTime, now)}
+                    End
                   {:else}
-                    Draft
+                    <!-- If it's not started -->
+                    {#if isAfter(problem.startTime, now)}
+                      {formatDate(problem.startTime)}
+                    {/if}
+                    ~ {formatDate(problem.endTime)}
                   {/if}
-                </div>
-                {problem.name}
-              </button>
-            </li>
+                {:else if problem.startTime !== null}
+                  Permanent
+                {:else}
+                  Draft
+                {/if}
+              </StructuredListCell>
+            </StructuredListRow>
           {/each}
-          {#if paging && !noMore}
-            <li>
-              <button
-                type="button"
-                class="bg-green-600"
-                on:click={() => {
-                  dispatch('loadMore', problems[problems.length - 1].id);
-                }}
-              >
-                Load more
-              </button>
-            </li>
-          {/if}
         {/await}
       {/each}
-    </ul>
+    </StructuredListBody>
+  </StructuredList>
+  {#if paging && !noMore && lastProblemId !== null}
+    <div class="text-right">
+      <Button
+        on:click={() => {
+          if (lastProblemId !== null) {
+            dispatch('loadMore', lastProblemId);
+          }
+        }}
+      >
+        Load more
+      </Button>
+    </div>
   {/if}
-</div>
+{/if}

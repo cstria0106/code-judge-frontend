@@ -1,13 +1,40 @@
 <script>
   import '../app.css';
-  import '../default-styles.scss';
+  // import '../default-styles.scss';
+  import 'carbon-components-svelte/css/white.css';
 
   import { Toaster } from 'svelte-french-toast';
   import FetchUser from '$lib/components/loaders/FetchUser.svelte';
   import Loading from '$lib/components/guards/AfterLoad.svelte';
   import CheckConnection from '$lib/components/loaders/CheckConnection.svelte';
   import EndOfLoading from '$lib/components/loaders/EndOfLoading.svelte';
-  import Header from './Header.svelte';
+  import UserAvatarFilledAlt from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte';
+  import {
+    Content,
+    Grid,
+    Header,
+    HeaderAction,
+    HeaderActionLink,
+    HeaderNav,
+    HeaderNavItem,
+    HeaderPanelLink,
+    HeaderPanelLinks,
+    HeaderUtilities,
+    SideNav,
+    SideNavItems,
+    SideNavLink,
+  } from 'carbon-components-svelte';
+  import { loginToken } from '$lib/store';
+  import { reloadApp } from '$lib/app';
+  import { base } from '$app/paths';
+
+  let userMenuOpened = false;
+  let sideNavOpened = false;
+
+  function logout() {
+    loginToken.set(null);
+    reloadApp();
+  }
 </script>
 
 <Toaster />
@@ -19,14 +46,30 @@
 </CheckConnection>
 
 <Loading>
-  <div class="min-w-screen min-h-screen flex flex-col items-center">
-    <div class="w-full flex justify-center border-b border-b-gray-200">
-      <div class="w-full tablet:min-w-[800px] tablet:w-auto px-8">
-        <Header />
-      </div>
-    </div>
-    <div class={`w-full tablet:min-w-[800px] tablet:w-auto p-8`}>
+  <Header company="Algorithm" href="/" bind:isSideNavOpen={sideNavOpened}>
+    <HeaderUtilities>
+      <HeaderAction bind:isOpen={userMenuOpened} icon={UserAvatarFilledAlt}>
+        <HeaderPanelLinks>
+          <HeaderPanelLink
+            href={`${base}/my/edit`}
+            on:click={() => {
+              userMenuOpened = false;
+            }}>Edit</HeaderPanelLink
+          >
+          <HeaderPanelLink on:click={logout}>Logout</HeaderPanelLink>
+        </HeaderPanelLinks>
+      </HeaderAction>
+    </HeaderUtilities>
+  </Header>
+  <SideNav bind:isOpen={sideNavOpened}>
+    <SideNavItems>
+      <SideNavLink text="Problems" href={`${base}/`} />
+      <SideNavLink text="Submits" href={`${base}/submits`} />
+    </SideNavItems>
+  </SideNav>
+  <Content>
+    <Grid fullWidth>
       <slot />
-    </div>
-  </div>
+    </Grid>
+  </Content>
 </Loading>
