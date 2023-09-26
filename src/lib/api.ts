@@ -25,7 +25,7 @@ export function getConnection(noAuthorization?: boolean): api.IConnection {
         ? undefined
         : { Authorization: addBearerPrefix(token) }),
     },
-  };
+  } as const satisfies api.IConnection;
 }
 
 export function getWebsocketConnection(

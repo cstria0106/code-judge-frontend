@@ -103,20 +103,11 @@
     }
   }
 
-  function downloadArtifact(type: 'public' | 'hidden') {
-    downloadBase64(
-      originalProblem.artifacts.inputs[type],
-      `${originalProblem.name}-input-${type}.bin`,
-    );
-  }
-
-  function downloadBase64(s: string, name: string) {
-    const buffer = Buffer.from(s, 'base64');
-    const blob = new Blob([buffer], { type: 'application/octet-stream' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = name;
-    link.click();
+  function downloadInput(type: 'public' | 'hidden') {
+    // downloadBase64(
+    //   originalProblem.artifacts.inputs[type],
+    //   `${originalProblem.name}-input-${type}.bin`,
+    // );
   }
 
   let fileInput: HTMLInputElement;
@@ -147,13 +138,21 @@
     if (files.length === 0) return;
 
     const file = files[0];
-    const base64 = new Buffer(await file.arrayBuffer()).toString('base64');
+    const connection = getConnection();
 
-    editingProblem.artifacts.inputs[type] = base64;
-  }
+    const formData = new FormData();
+    formData.append('file', file);
 
-  function base64Size(s: string) {
-    return filesize(Math.floor((s.length / 4) * 3));
+    const response = await fetch(`${connection.host}/storage`, {
+      headers: connection.headers,
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.status === 201) {
+      const body = (await response.json()) as { id: string };
+      editingProblem.artifacts.inputs[type] = body.id;
+    }
   }
 
   function cancelUploadArtifact(type: 'public' | 'hidden') {
@@ -225,17 +224,17 @@
           <div class="grid grid-cols-[auto_1fr] items-center gap-x-2">
             {#if editingProblem.artifacts.inputs.public === originalProblem.artifacts.inputs.public}
               <button on:click={() => uploadArtifact('public')}>Upload</button>
-              <button on:click={() => downloadArtifact('public')}
-                >Download ({base64Size(
-                  originalProblem.artifacts.inputs.public,
-                )})</button
-              >
+              {#if editingProblem.artifacts.inputs.public !== null}
+                <button on:click={() => downloadInput('public')}>
+                  Download
+                </button>
+              {/if}
             {:else}
               <button
                 class="col-span-2"
                 on:click={() => cancelUploadArtifact('public')}
               >
-                Cancel ({base64Size(editingProblem.artifacts.inputs.public)})
+                Cancel
               </button>
             {/if}
           </div>
@@ -243,17 +242,17 @@
           <div class="grid grid-cols-[auto_1fr] items-center gap-x-2">
             {#if editingProblem.artifacts.inputs.hidden === originalProblem.artifacts.inputs.hidden}
               <button on:click={() => uploadArtifact('hidden')}>Upload</button>
-              <button on:click={() => downloadArtifact('hidden')}
-                >Download ({base64Size(
-                  originalProblem.artifacts.inputs.hidden,
-                )})
-              </button>
+              {#if editingProblem.artifacts.inputs.hidden !== null}
+                <button on:click={() => downloadInput('hidden')}>
+                  Download
+                </button>
+              {/if}
             {:else}
               <button
                 class="col-span-2"
                 on:click={() => cancelUploadArtifact('hidden')}
               >
-                Cancel ({base64Size(editingProblem.artifacts.inputs.hidden)})
+                Cancel
               </button>
             {/if}
           </div>
