@@ -217,7 +217,7 @@
               label="Memory Limit (kilobytes)"
             />
             <FormLabel class="mt-1">
-              {filesize(editingProblem.memoryLimit)}
+              {filesize(editingProblem.memoryLimit * 1000)}
             </FormLabel>
           </Column>
         </Row>
