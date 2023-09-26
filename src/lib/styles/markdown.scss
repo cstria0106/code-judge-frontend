@@ -5,20 +5,25 @@
 
   @apply text-sm border border-solid border-gray-200 rounded-md p-6;
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply my-4;
+  }
+
   hr {
-    @apply my-2 border-gray-200 border-t-4;
+    @apply my-2 border-gray-300 border-t border-dashed;
   }
 
   ul {
-    @apply pl-4 list-disc list-inside;
+    @apply list-disc list-inside;
   }
 
   ol {
     @apply list-decimal list-inside;
-  }
-
-  a {
-    @apply text-blue-600 hover:underline;
   }
 
   :not(pre) > code {
@@ -26,7 +31,7 @@
   }
 
   pre code {
-    @apply border-2 border-gray-200 border-solid rounded-md my-2 last:mb-0;
+    @apply border border-gray-200 border-solid rounded-md my-2 last:mb-0;
   }
 
   blockquote {
@@ -37,8 +42,12 @@
     @apply my-4;
   }
 
+  table {
+    @apply w-full;
+  }
+
   th,
   td {
-    @apply border border-gray-200 p-2;
+    @apply border border-solid border-gray-200 p-2;
   }
 }
