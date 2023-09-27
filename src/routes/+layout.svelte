@@ -14,9 +14,6 @@
     Grid,
     Header,
     HeaderAction,
-    HeaderActionLink,
-    HeaderNav,
-    HeaderNavItem,
     HeaderPanelLink,
     HeaderPanelLinks,
     HeaderUtilities,
@@ -27,7 +24,7 @@
   import { loginToken } from '$lib/store';
   import { reloadApp } from '$lib/app';
   import { base } from '$app/paths';
-  import { Code } from 'carbon-icons-svelte';
+  import Code from 'carbon-icons-svelte/lib/Code.svelte';
 
   let userMenuOpened = false;
   let sideNavOpened = false;

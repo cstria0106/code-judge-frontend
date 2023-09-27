@@ -4,9 +4,7 @@
     InitialSubmit,
     SubmitSubscribeEvent,
   } from '$lib/api/websocket/submit';
-  import BoxTitle from '$lib/components/BoxTitle.svelte';
   import UserOnly from '$lib/components/guards/UserOnly.svelte';
-  import Box from '$lib/components/layouts/Box.svelte';
   import { connectWebsocket } from '$lib/websocket';
   import type api from '@code-judge/api';
   import moment from 'moment';

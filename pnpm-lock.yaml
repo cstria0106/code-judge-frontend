@@ -17,12 +17,6 @@ dependencies:
   '@codemirror/lang-markdown':
     specifier: ^6.2.0
     version: 6.2.0
-  '@fortawesome/free-brands-svg-icons':
-    specifier: ^6.4.2
-    version: 6.4.2
-  '@fortawesome/free-solid-svg-icons':
-    specifier: ^6.4.2
-    version: 6.4.2
   '@uiw/codemirror-theme-github':
     specifier: ^4.21.13
     version: 4.21.13(@codemirror/language@6.9.0)(@codemirror/state@6.2.1)(@codemirror/view@6.18.0)
@@ -65,15 +59,9 @@ dependencies:
   svelte-codemirror-editor:
     specifier: ^1.1.0
     version: 1.1.0(codemirror@6.0.1)
-  svelte-fa:
-    specifier: ^3.0.4
-    version: 3.0.4
   svelte-french-toast:
     specifier: ^1.2.0
     version: 1.2.0(svelte@4.2.0)
-  svelte-icons-pack:
-    specifier: ^2.1.0
-    version: 2.1.0
   svelte-local-storage-store:
     specifier: ^0.6.0
     version: 0.6.0(svelte@4.2.0)
@@ -497,28 +485,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /@fortawesome/fontawesome-common-types@6.4.2:
-    resolution: {integrity: sha512-1DgP7f+XQIJbLFCTX1V2QnxVmpLdKdzzo2k8EmvDOePfchaIGQ9eCHj2up3/jNEbZuBqel5OxiaOJf37TWauRA==}
-    engines: {node: '>=6'}
-    requiresBuild: true
-    dev: false
-
-  /@fortawesome/free-brands-svg-icons@6.4.2:
-    resolution: {integrity: sha512-LKOwJX0I7+mR/cvvf6qIiqcERbdnY+24zgpUSouySml+5w8B4BJOx8EhDR/FTKAu06W12fmUIcv6lzPSwYKGGg==}
-    engines: {node: '>=6'}
-    requiresBuild: true
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.4.2
-    dev: false
-
-  /@fortawesome/free-solid-svg-icons@6.4.2:
-    resolution: {integrity: sha512-sYwXurXUEQS32fZz9hVCUUv/xu49PEJEyUOsA51l6PU/qVgfbTb2glsTEaJngVVT8VqBATRIdh7XVgV1JF1LkA==}
-    engines: {node: '>=6'}
-    requiresBuild: true
-    dependencies:
-      '@fortawesome/fontawesome-common-types': 6.4.2
-    dev: false
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
@@ -1786,10 +1752,6 @@ packages:
       codemirror: 6.0.1(@lezer/common@1.0.4)
     dev: false
 
-  /svelte-fa@3.0.4:
-    resolution: {integrity: sha512-y04vEuAoV1wwVDItSCzPW7lzT6v1bj/y1p+W1V+NtIMpQ+8hj8MBkx7JFD7JHSnalPU1QiI8BVfguqheEA3nPg==}
-    dev: false
-
   /svelte-french-toast@1.2.0(svelte@4.2.0):
     resolution: {integrity: sha512-5PW+6RFX3xQPbR44CngYAP1Sd9oCq9P2FOox4FZffzJuZI2mHOB7q5gJBVnOiLF5y3moVGZ7u2bYt7+yPAgcEQ==}
     peerDependencies:
@@ -1807,10 +1769,6 @@ packages:
     dependencies:
       svelte: 4.2.0
     dev: true
-
-  /svelte-icons-pack@2.1.0:
-    resolution: {integrity: sha512-6Il0vWi/6MW3wXSorZhCqhkJGH4Pcg1WTcdlfFMPXfJqafZVQgmKdhVFS1c2hXGvs4byttpLC9XmI3okV1uMWA==}
-    dev: false
 
   /svelte-local-storage-store@0.6.0(svelte@4.2.0):
     resolution: {integrity: sha512-UbCY/yT/YUadU5IX/gZkoRQnA+ebFZHKKQjlJvfWHnBj3CPe9sNn8ndxYz/xy4LUzGjuBLq8+wH5RYK54ba3wA==}

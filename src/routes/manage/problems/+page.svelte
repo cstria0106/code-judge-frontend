@@ -1,10 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { getConnection } from '$lib/api';
-  import BoxTitle from '$lib/components/BoxTitle.svelte';
   import Problems from '$lib/components/Problems.svelte';
-  import Box from '$lib/components/layouts/Box.svelte';
-  import Orientation from '$lib/components/layouts/Orientation.svelte';
   import api from '@code-judge/api';
   import moment from 'moment';
   import { onMount } from 'svelte';

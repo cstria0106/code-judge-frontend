@@ -2,10 +2,8 @@
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
   import { getConnection } from '$lib/api';
-  import BoxTitle from '$lib/components/BoxTitle.svelte';
   import Problems from '$lib/components/Problems.svelte';
   import UserOnly from '$lib/components/guards/UserOnly.svelte';
-  import Box from '$lib/components/layouts/Box.svelte';
   import api from '@code-judge/api';
 
   function onLoadMore(cursor: string) {

@@ -1,32 +1,17 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import BoxTitle from '$lib/components/BoxTitle.svelte';
   import UserOnly from '$lib/components/guards/UserOnly.svelte';
-  import Box from '$lib/components/layouts/Box.svelte';
   import FetchUser from '$lib/components/loaders/FetchUser.svelte';
-  import Fa from 'svelte-fa';
-  import {
-    faUser,
-    faTriangleExclamation,
-    faClipboardQuestion,
-    faEdit,
-    faRightFromBracket,
-  } from '@fortawesome/free-solid-svg-icons';
-  import { loginToken } from '$lib/store';
-  import { reloadApp } from '$lib/app';
   import api from '@code-judge/api';
   import { getConnection } from '$lib/api';
   import Problems from '$lib/components/Problems.svelte';
-  import Orientation from '$lib/components/layouts/Orientation.svelte';
   import { base } from '$app/paths';
   import {
     Button,
     ButtonSet,
     Column,
-    Row,
     ToastNotification,
   } from 'carbon-components-svelte';
-  import { WarningAltFilled } from 'carbon-icons-svelte';
 
   const problems = api.functional.problem
     .list(getConnection(), {})

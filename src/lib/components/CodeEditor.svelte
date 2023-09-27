@@ -1,7 +1,6 @@
 <script lang="ts">
   import { cpp } from '@codemirror/lang-cpp';
   import { java } from '@codemirror/lang-java';
-  import BoxTitle from './BoxTitle.svelte';
   import CodeMirror from 'svelte-codemirror-editor';
   import type { Language } from '$lib/language';
   import { FormLabel } from 'carbon-components-svelte';

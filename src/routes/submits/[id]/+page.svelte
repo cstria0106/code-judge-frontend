@@ -5,16 +5,13 @@
     DetailSubmit,
     SubmitSubscribeEvent,
   } from '$lib/api/websocket/submit';
-  import BoxTitle from '$lib/components/BoxTitle.svelte';
   import UserOnly from '$lib/components/guards/UserOnly.svelte';
-  import Box from '$lib/components/layouts/Box.svelte';
   import { connectWebsocket } from '$lib/websocket';
   import { match } from 'ts-pattern';
   import SubmitTable from '../SubmitTable.svelte';
   import CodeEditor from '$lib/components/CodeEditor.svelte';
   import api from '@code-judge/api';
   import { goto } from '$app/navigation';
-  import type { Language } from '$lib/language';
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
   import { Button, CodeSnippet, Column, Row } from 'carbon-components-svelte';

@@ -2,25 +2,18 @@
   import '$lib/styles/markdown.scss';
   import { page } from '$app/stores';
   import { getConnection } from '$lib/api';
-  import Box from '$lib/components/layouts/Box.svelte';
   import api from '@code-judge/api';
   import { get } from 'svelte/store';
   import CodeMirror from 'svelte-codemirror-editor';
   import { markdown } from '@codemirror/lang-markdown';
   import { githubLight } from '@uiw/codemirror-theme-github';
   import _ from 'lodash';
-  import BoxTitle from '$lib/components/BoxTitle.svelte';
-  import Orientation from '$lib/components/layouts/Orientation.svelte';
   import { DateInput } from 'date-picker-svelte';
   import hljs from 'highlight.js';
   import { Marked } from 'marked';
   import { markedHighlight } from 'marked-highlight';
-  import Fa from 'svelte-fa';
-  import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-  import { Buffer } from 'buffer';
   import { filesize } from 'filesize';
   import CodeEditor from '$lib/components/CodeEditor.svelte';
-  import { languageNames, type Language, languages } from '$lib/language';
   import LanguageSelector from '$lib/components/LanguageSelector.svelte';
   import {
     Button,
@@ -30,14 +23,15 @@
     FileUploaderButton,
     FormLabel,
     InlineLoading,
-    Loading,
     NumberInput,
     Row,
     TextInput,
   } from 'carbon-components-svelte';
-  import { Save, TrashCan } from 'carbon-icons-svelte';
+  import Save from 'carbon-icons-svelte/lib/Save.svelte';
   import { loginToken } from '../../../../lib/store';
   import toast from 'svelte-french-toast';
+  import { languages, type Language } from '$lib/language';
+  import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
 
   const id = get(page).params.id;
 
@@ -225,11 +219,11 @@
           <Column class="flex-grow-0">
             <FormLabel for="public-input">Public Input</FormLabel>
             {#if editingProblem.artifacts.inputs.public === null}
-              <FileUploaderButton
+              <FileUploader
                 on:change={({ detail }) => {
                   uploadInput('public', detail[0]);
                 }}
-                labelText="Upload"
+                buttonLabel="Upload"
               />
             {:else}
               <Button
@@ -246,11 +240,11 @@
           <Column class="flex-grow-0">
             <FormLabel for="hidden-input">Hidden Input</FormLabel>
             {#if editingProblem.artifacts.inputs.hidden === null}
-              <FileUploaderButton
+              <FileUploader
                 on:change={({ detail }) => {
                   uploadInput('hidden', detail[0]);
                 }}
-                labelText="Upload"
+                buttonLabel="Upload"
               />
             {:else}
               <Button

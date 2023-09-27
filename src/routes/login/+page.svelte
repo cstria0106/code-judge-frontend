@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { getConnection } from '$lib/api';
   import { reloadApp } from '$lib/app';
-  import Box from '$lib/components/layouts/Box.svelte';
   import { resolveErrorMessage } from '$lib/error';
   import { loginToken } from '$lib/store';
   import api, { HttpError } from '@code-judge/api';
