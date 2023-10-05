@@ -10,11 +10,15 @@ export type DetailSubmit = {
     id: string;
     name: string;
   };
+  user?: {
+    id: string;
+    name: string;
+  };
 };
 
 export type InitialSubmit = Pick<
   DetailSubmit,
-  'id' | 'status' | 'createdAt' | 'problem' | 'language'
+  'id' | 'status' | 'createdAt' | 'problem' | 'language' | 'user'
 >;
 
 export type UpdateSubmit = Pick<DetailSubmit, 'id' | 'status'>;

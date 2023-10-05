@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { base } from '$app/paths';
   import type { InitialSubmit } from '$lib/api/websocket/submit';
   import { languageNames } from '$lib/language';
@@ -15,11 +14,15 @@
   import { match } from 'ts-pattern';
 
   export let submits: InitialSubmit[];
+  export let user = false;
 </script>
 
 <StructuredList>
   <StructuredListHead>
     <StructuredListRow head>
+      {#if user}
+        <StructuredListCell head>User</StructuredListCell>
+      {/if}
       <StructuredListCell head>Problem</StructuredListCell>
       <StructuredListCell head>Status</StructuredListCell>
       <StructuredListCell head>Memory</StructuredListCell>
@@ -31,6 +34,13 @@
   <StructuredListBody>
     {#each submits as submit}
       <StructuredListRow>
+        {#if user}
+          <StructuredListCell>
+            <a href={`${base}/manage/users/${submit.user?.id}`}>
+              {submit.user?.name}
+            </a>
+          </StructuredListCell>
+        {/if}
         <StructuredListCell>
           <a href={`${base}/problems/${submit.problem.id}`}>
             {submit.problem.name}
