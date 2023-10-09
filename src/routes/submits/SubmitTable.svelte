@@ -14,13 +14,13 @@
   import { match } from 'ts-pattern';
 
   export let submits: InitialSubmit[];
-  export let user = false;
+  export let manage = false;
 </script>
 
 <StructuredList>
   <StructuredListHead>
     <StructuredListRow head>
-      {#if user}
+      {#if manage}
         <StructuredListCell head>User</StructuredListCell>
       {/if}
       <StructuredListCell head>Problem</StructuredListCell>
@@ -34,7 +34,7 @@
   <StructuredListBody>
     {#each submits as submit}
       <StructuredListRow>
-        {#if user}
+        {#if manage}
           <StructuredListCell>
             <a href={`${base}/manage/users/${submit.user?.id}`}>
               {submit.user?.name}
@@ -85,7 +85,7 @@
             : ''}
         </StructuredListCell>
         <StructuredListCell>
-          <a href={`${base}/submits/${submit.id}`}>
+          <a href={`${base}/submits/${submit.id}${manage ? '?manage' : ''}`}>
             {languageNames[submit.language]}
             <span class="text-xs">(Edit)</span>
           </a>

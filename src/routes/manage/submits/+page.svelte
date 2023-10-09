@@ -26,7 +26,7 @@
   <Column>
     <h4>Submits</h4>
     {#await submits then submits}
-      <SubmitTable user {submits} />
+      <SubmitTable manage {submits} />
     {/await}
   </Column>
 </AdminOnly>
