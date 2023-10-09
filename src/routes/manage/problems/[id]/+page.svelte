@@ -105,11 +105,11 @@
           public:
             (artifacts.inputs.public?.length ?? 0) > 0
               ? artifacts.inputs.public
-              : null,
+              : undefined,
           hidden:
             (artifacts.inputs.hidden?.length ?? 0) > 0
               ? artifacts.inputs.hidden
-              : null,
+              : undefined,
         },
       },
       timeLimit,
@@ -140,7 +140,7 @@
         'Are you sure to remove this input file? You can not revert this action.',
       )
     ) {
-      editingProblem.artifacts.inputs[type] = null;
+      editingProblem.artifacts.inputs[type] = undefined;
     }
   }
 
@@ -218,7 +218,7 @@
         <Row class="mb-4">
           <Column class="flex-grow-0">
             <FormLabel for="public-input">Public Input</FormLabel>
-            {#if editingProblem.artifacts.inputs.public === null}
+            {#if editingProblem.artifacts.inputs.public === undefined}
               <FileUploader
                 on:change={({ detail }) => {
                   uploadInput('public', detail[0]);
@@ -239,7 +239,7 @@
           </Column>
           <Column class="flex-grow-0">
             <FormLabel for="hidden-input">Hidden Input</FormLabel>
-            {#if editingProblem.artifacts.inputs.hidden === null}
+            {#if editingProblem.artifacts.inputs.hidden === undefined}
               <FileUploader
                 on:change={({ detail }) => {
                   uploadInput('hidden', detail[0]);
