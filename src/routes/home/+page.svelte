@@ -24,6 +24,12 @@
   <!-- slot null check가 자동으로 안돼서 임시로 넣어야 함 -->
   {#if user !== null}
     <Column>
+      <ToastNotification
+        fullWidth
+        kind="warning"
+        title="PS 관련 질문은 이루리 혹은 조교의 연락처로 질문 부탁드립니다."
+        caption={new Date().toLocaleString()}
+      />
       {#if user.shouldChangePassword}
         <ToastNotification
           fullWidth
