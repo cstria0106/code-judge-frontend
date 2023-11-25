@@ -146,25 +146,19 @@
 
   async function uploadInput(type: 'public' | 'hidden', file: File) {
     // Upload file
-    const connection = getConnection();
-    const token = get(loginToken);
-    if (token === null) return;
+    const { url: uploadUrl, id: fileId } =
+      await api.functional.storage.getUploadUrl(getConnection(), {
+        filename: file.name,
+      });
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await fetch(`${connection.host}/storage`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      method: 'POST',
-      body: formData,
+    const response = await fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
     });
 
     // Set file id
-    if (response.status === 201) {
-      const body = (await response.json()) as { id: string };
-      editingProblem.artifacts.inputs[type] = body.id;
+    if (response.status === 200) { 
+      editingProblem.artifacts.inputs[type] = fileId;
       toast.success('Successfully uploaded.');
     } else {
       toast.error('Failed to upload.');
