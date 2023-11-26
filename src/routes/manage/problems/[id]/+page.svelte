@@ -153,9 +153,12 @@
       },
     );
 
+    const stream = new CompressionStream('gzip');
+    const gzipStream = file.stream().pipeThrough(stream);
+
     const response = await fetch(uploadUrl, {
       method: 'PUT',
-      body: file,
+      body: gzipStream,
     });
 
     // Set file id
