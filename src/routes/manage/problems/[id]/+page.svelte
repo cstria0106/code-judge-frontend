@@ -156,7 +156,7 @@
 
     const response = await fetch(uploadUrl, {
       method: 'PUT',
-      body: pako.deflate(await file.arrayBuffer()),
+      body: pako.gzip(await file.arrayBuffer()),
     });
 
     // Set file id
@@ -174,9 +174,11 @@
       fileId,
     );
 
-    const blob = await fetch(downloadUrl).then((response) => response.blob());
+    const buffer = await fetch(downloadUrl)
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => pako.ungzip(buffer));
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
+    link.href = URL.createObjectURL(new Blob([buffer]));
     link.download = filename;
     link.click();
     link.href = '';
