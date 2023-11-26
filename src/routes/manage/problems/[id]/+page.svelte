@@ -146,10 +146,12 @@
 
   async function uploadInput(type: 'public' | 'hidden', file: File) {
     // Upload file
-    const { url: uploadUrl, id: fileId } =
-      await api.functional.storage.getUploadUrl(getConnection(), {
+    const { uploadUrl, id: fileId } = await api.functional.storage.create(
+      getConnection(),
+      {
         filename: file.name,
-      });
+      },
+    );
 
     const response = await fetch(uploadUrl, {
       method: 'PUT',
@@ -157,12 +159,26 @@
     });
 
     // Set file id
-    if (response.status === 200) { 
+    if (response.status === 200) {
       editingProblem.artifacts.inputs[type] = fileId;
       toast.success('Successfully uploaded.');
     } else {
       toast.error('Failed to upload.');
     }
+  }
+
+  async function downloadInput(fileId: string): Promise<void> {
+    const { downloadUrl, filename } = await api.functional.storage.get(
+      getConnection(),
+      fileId,
+    );
+
+    const blob = await fetch(downloadUrl).then((response) => response.blob());
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    link.href = '';
   }
 
   let editingJudgeCodeLanguage: Language = 'C';
@@ -226,8 +242,19 @@
                 on:click={() => {
                   removeInput('public');
                 }}
+                class="w-full"
               >
                 Remove
+              </Button>
+
+              <Button
+                size="small"
+                class="w-full"
+                on:click={() => {
+                  downloadInput(editingProblem.artifacts.inputs.public);
+                }}
+              >
+                Download
               </Button>
             {/if}
           </Column>
@@ -247,8 +274,18 @@
                 on:click={() => {
                   removeInput('hidden');
                 }}
+                class="w-full"
               >
                 Remove
+              </Button>
+              <Button
+                size="small"
+                class="w-full"
+                on:click={() => {
+                  downloadInput(editingProblem.artifacts.inputs.hidden);
+                }}
+              >
+                Download
               </Button>
             {/if}
           </Column>
