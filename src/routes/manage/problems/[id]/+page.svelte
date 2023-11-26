@@ -2,6 +2,7 @@
   import '$lib/styles/markdown.scss';
   import { page } from '$app/stores';
   import { getConnection } from '$lib/api';
+  import pako from 'pako';
   import api from '@code-judge/api';
   import { get } from 'svelte/store';
   import CodeMirror from 'svelte-codemirror-editor';
@@ -153,12 +154,9 @@
       },
     );
 
-    const stream = new CompressionStream('gzip');
-    const gzipStream = file.stream().pipeThrough(stream);
-
     const response = await fetch(uploadUrl, {
       method: 'PUT',
-      body: gzipStream,
+      body: pako.deflate(await file.arrayBuffer()),
     });
 
     // Set file id

@@ -50,6 +50,9 @@ dependencies:
   moment:
     specifier: ^2.29.4
     version: 2.29.4
+  pako:
+    specifier: ^2.1.0
+    version: 2.1.0
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
@@ -94,6 +97,9 @@ devDependencies:
   '@types/lodash':
     specifier: ^4.14.198
     version: 4.14.198
+  '@types/pako':
+    specifier: ^2.0.3
+    version: 2.0.3
   autoprefixer:
     specifier: ^10.4.15
     version: 10.4.15(postcss@8.4.29)
@@ -712,6 +718,10 @@ packages:
 
   /@types/lodash@4.14.198:
     resolution: {integrity: sha512-trNJ/vtMZYMLhfN45uLq4ShQSw0/S7xCTLLVM+WM1rmFpba/VS42jVUgaO3w/NOLiWR/09lnYk0yMaA/atdIsg==}
+    dev: true
+
+  /@types/pako@2.0.3:
+    resolution: {integrity: sha512-bq0hMV9opAcrmE0Byyo0fY3Ew4tgOevJmQ9grUhpXQhYfyLJ1Kqg3P33JT5fdbT2AjeAjR51zqqVjAL/HMkx7Q==}
     dev: true
 
   /@types/pug@2.0.6:
@@ -1404,6 +1414,10 @@ packages:
     dependencies:
       wrappy: 1.0.2
     dev: true
+
+  /pako@2.1.0:
+    resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
+    dev: false
 
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
