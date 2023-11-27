@@ -12,8 +12,8 @@
   import { base } from '$app/paths';
   import {
     Button,
+    ButtonSet,
     Column,
-    FormLabel,
     Row,
     StructuredList,
     StructuredListBody,
@@ -22,6 +22,7 @@
     StructuredListRow,
   } from 'carbon-components-svelte';
   import { filesize } from 'filesize';
+  import { onMount } from 'svelte';
 
   const id = get(page).params.id;
 
@@ -47,7 +48,15 @@
   }
 </script>
 
-<UserOnly>
+<svelte:window
+  on:beforeunload|preventDefault={(e) => {
+    e.preventDefault();
+    e.returnValue = true;
+    return 'Are you sure to leave this page?';
+  }}
+/>
+
+<UserOnly let:user>
   {#await problem then problem}
     <Column>
       <Row>
@@ -84,8 +93,18 @@
           />
           <CodeEditor bind:code={codes[language]} bind:language />
           <Row>
-            <Column class="flex flex-col items-end">
-              <Button class="mt-4" on:click={submit}>Submit</Button>
+            <Column>
+              <ButtonSet class="flex justify-end mt-4">
+                {#if user !== null && user.role === 'ADMIN'}
+                  <Button
+                    kind="tertiary"
+                    on:click={() => {
+                      goto(`${base}/manage/problems/${problem.id}`);
+                    }}>Manage</Button
+                  >
+                {/if}
+                <Button on:click={submit}>Submit</Button>
+              </ButtonSet>
             </Column>
           </Row>
         </Column>

@@ -33,6 +33,8 @@
   import toast from 'svelte-french-toast';
   import { languages, type Language } from '$lib/language';
   import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
+  import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
 
   const id = get(page).params.id;
 
@@ -117,7 +119,6 @@
       memoryLimit: memoryLimit * 1000,
     });
 
-    history.back();
     toast.success('Successfully saved.');
   }
 
@@ -187,6 +188,14 @@
   let editingJudgeCodeLanguage: Language = 'C';
   let editingProblemCodeLanguage: Language = 'C';
 </script>
+
+<svelte:window
+  on:beforeunload|preventDefault={(e) => {
+    e.preventDefault();
+    e.returnValue = true;
+    return 'Are you sure to leave this page?';
+  }}
+/>
 
 {#await problem}
   <InlineLoading />
@@ -352,6 +361,12 @@
     <Row class="mt-[350px]">
       <Column>
         <ButtonSet class="justify-end">
+          <Button
+            kind="tertiary"
+            on:click={() => {
+              goto(`${base}/problems/${problem.id}`);
+            }}>Go to problem</Button
+          >
           <Button kind="danger" on:click={destroy} icon={TrashCan}
             >Destroy
           </Button>

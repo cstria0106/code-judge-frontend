@@ -44,7 +44,7 @@
 </CheckConnection>
 
 <Loading>
-  <Header href="/" bind:isSideNavOpen={sideNavOpened}>
+  <Header href="/home" bind:isSideNavOpen={sideNavOpened}>
     <span slot="company"><Code /> Algorithm</span>
 
     <HeaderUtilities>
@@ -63,7 +63,7 @@
   </Header>
   <SideNav bind:isOpen={sideNavOpened}>
     <SideNavItems>
-      <SideNavLink text="Problems" href={`${base}/`} />
+      <SideNavLink text="Problems" href={`${base}/home`} />
       <SideNavLink text="Submits" href={`${base}/submits`} />
     </SideNavItems>
   </SideNav>
