@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@code-judge/api':
-    specifier: ^0.1.28
-    version: 0.1.28(typescript@5.2.2)
+    specifier: ^0.1.30
+    version: 0.1.30(typescript@5.2.2)
   '@codemirror/lang-cpp':
     specifier: ^6.0.2
     version: 6.0.2
@@ -159,8 +159,8 @@ packages:
     resolution: {integrity: sha512-IX4oJCe14ctblSPZBlW64BVZ9nYLUo6sD2I5gu3hX0ywByYWm1OuoKm9Xb/Zpbj8Ph18Z7Ryii6u2/ocnncXdA==}
     dev: true
 
-  /@code-judge/api@0.1.28(typescript@5.2.2):
-    resolution: {integrity: sha512-s/BZdd8Jxfk1rWtA6rukAxOcYffAvUrb+NtxPPZUM8zFQnrb6f72SlUNxeqxc06w1YKb1bJl4RkxuDl777DgKw==}
+  /@code-judge/api@0.1.30(typescript@5.2.2):
+    resolution: {integrity: sha512-rBMAcoSJTP7Q9oViA16f89938hC574hQUrkJV4/1VVUYO+vfzAU3DMCWL4GJDRW2coWTv6iw2gj0eZ29m4EwUw==}
     dependencies:
       '@nestia/fetcher': 1.6.7(typescript@5.2.2)
     transitivePeerDependencies:

@@ -17,7 +17,7 @@
   export let manage = false;
 </script>
 
-<StructuredList>
+<StructuredList condensed>
   <StructuredListHead>
     <StructuredListRow head>
       {#if manage}
@@ -42,7 +42,7 @@
           </StructuredListCell>
         {/if}
         <StructuredListCell>
-          <a href={`${base}/problems/${submit.problem.id}`}>
+          <a href={`${base}/problems/${submit.problem.id}`} class="py-2 block">
             {submit.problem.name}
           </a>
         </StructuredListCell>

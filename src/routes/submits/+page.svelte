@@ -6,16 +6,22 @@
   } from '$lib/api/websocket/submit';
   import UserOnly from '$lib/components/guards/UserOnly.svelte';
   import { connectWebsocket } from '$lib/websocket';
-  import type api from '@code-judge/api';
-  import moment from 'moment';
   import { match } from 'ts-pattern';
   import SubmitTable from './SubmitTable.svelte';
   import { onMount } from 'svelte';
-  import { Column } from 'carbon-components-svelte';
+  import { Column, PaginationNav } from 'carbon-components-svelte';
+  import type { Socket } from 'socket.io-client';
 
-  let skip = 0;
+  let count = 0;
+  let page = 0;
+  const take = 20;
+  let lastSocket: Socket | null = null;
 
-  onMount(async () => {
+  async function loadPage(page: number) {
+    if (lastSocket !== null) {
+      lastSocket.close();
+    }
+
     const websocket = await connectWebsocket<SubmitSubscribeEvent>(
       getWebsocketConnection(),
     );
@@ -25,6 +31,7 @@
       match(payload)
         .with({ event: 'get/submit/initial' }, (payload) => {
           submits = payload.data.submits;
+          count = payload.data.count;
         })
         .with({ event: 'get/submit/update' }, (payload) => {
           submits = submits?.map((submit) =>
@@ -36,7 +43,14 @@
         .otherwise(() => {});
     });
 
-    websocket.send({ event: 'get/submit', data: { skip } });
+    lastSocket = websocket.send({
+      event: 'get/submit',
+      data: { skip: page * take, take },
+    });
+  }
+
+  onMount(async () => {
+    loadPage(0);
   });
 
   let submits: InitialSubmit[] | undefined = undefined;
@@ -48,5 +62,12 @@
     {#if submits !== undefined}
       <SubmitTable {submits} />
     {/if}
+    <PaginationNav
+      page={page + 1}
+      total={Math.ceil(count / take)}
+      on:change={(e) => {
+        loadPage(e.detail.page - 1);
+      }}
+    />
   </Column>
 </UserOnly>

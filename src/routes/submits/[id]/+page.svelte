@@ -1,13 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { getConnection, getWebsocketConnection } from '$lib/api';
-  import type {
-    DetailSubmit,
-    SubmitSubscribeEvent,
-  } from '$lib/api/websocket/submit';
+  import { getConnection } from '$lib/api';
   import UserOnly from '$lib/components/guards/UserOnly.svelte';
-  import { connectWebsocket } from '$lib/websocket';
-  import { match } from 'ts-pattern';
   import SubmitTable from '../SubmitTable.svelte';
   import CodeEditor from '$lib/components/CodeEditor.svelte';
   import api from '@code-judge/api';
@@ -45,7 +39,7 @@
 <UserOnly>
   <Column>
     {#await submit then submit}
-      <SubmitTable submits={[submit]} />
+      <SubmitTable submits={[submit]} {manage} />
       <h5>Code</h5>
       <CodeEditor language={submit.language} bind:code />
       <Row class="my-4">

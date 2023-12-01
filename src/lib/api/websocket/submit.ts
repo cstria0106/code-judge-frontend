@@ -28,6 +28,7 @@ export type SubmitSubscribeEvent =
       event: 'get/submit/initial';
       data: {
         submits: InitialSubmit[];
+        count: number;
       };
     }
   | {

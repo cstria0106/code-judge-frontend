@@ -16,7 +16,8 @@ function addBearerPrefix(token: string | undefined | null) {
 }
 
 export function getConnection(noAuthorization?: boolean): api.IConnection {
-  const host = dev ? 'http://localhost:3000' : 'https://api.code.icnlab.dev';
+  // const host = dev ? 'http://localhost:3000' : 'https://api.code.icnlab.dev';
+  const host = 'https://api.code.icnlab.dev';
   const token = get(loginToken);
   return {
     host,
@@ -31,7 +32,8 @@ export function getConnection(noAuthorization?: boolean): api.IConnection {
 export function getWebsocketConnection(
   noAuthorization?: boolean,
 ): WebsocketConnection {
-  const host = dev ? 'ws://localhost:3000' : 'wss://api.code.icnlab.dev';
+  // const host = dev ? 'ws://localhost:3000' : 'wss://api.code.icnlab.dev';
+  const host = 'wss://api.code.icnlab.dev';
   const token = get(loginToken);
   return {
     host,
