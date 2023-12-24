@@ -148,7 +148,8 @@
       rows={Object.values(searchResult).map((e) => ({
         id: e.id,
         username: e.user.name,
-        result: e.status.type,
+        result:
+          e.status.type === 'COMPLETE' ? e.status.result.type : e.status.type,
         ...(e.status.type === 'COMPLETE' && e.status.result.type === 'SUCCESS'
           ? {
               time: `${e.status.result.time}ms`,
