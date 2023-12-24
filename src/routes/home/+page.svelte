@@ -54,6 +54,7 @@
             <Button href={`${base}/manage/problems`}>Problems</Button>
             <Button href={`${base}/manage/users`}>Users</Button>
             <Button href={`${base}/manage/submits`}>Submits</Button>
+            <Button href={`${base}/manage/judge`}>Judge</Button>
           </ButtonSet>
         {/if}
       {/if}

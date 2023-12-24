@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@code-judge/api':
-    specifier: ^0.1.31
-    version: 0.1.31(typescript@5.2.2)
+    specifier: ^0.1.33
+    version: 0.1.33(typescript@5.2.2)
   '@codemirror/lang-cpp':
     specifier: ^6.0.2
     version: 6.0.2
@@ -53,12 +53,18 @@ dependencies:
   pako:
     specifier: ^2.1.0
     version: 2.1.0
+  papaparse:
+    specifier: ^5.4.1
+    version: 5.4.1
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
   socket.io-client:
     specifier: ^4.7.2
     version: 4.7.2
+  svelte-autosize:
+    specifier: ^1.1.0
+    version: 1.1.0
   svelte-codemirror-editor:
     specifier: ^1.1.0
     version: 1.1.0(codemirror@6.0.1)
@@ -100,6 +106,9 @@ devDependencies:
   '@types/pako':
     specifier: ^2.0.3
     version: 2.0.3
+  '@types/papaparse':
+    specifier: ^5.3.14
+    version: 5.3.14
   autoprefixer:
     specifier: ^10.4.15
     version: 10.4.15(postcss@8.4.29)
@@ -159,8 +168,8 @@ packages:
     resolution: {integrity: sha512-IX4oJCe14ctblSPZBlW64BVZ9nYLUo6sD2I5gu3hX0ywByYWm1OuoKm9Xb/Zpbj8Ph18Z7Ryii6u2/ocnncXdA==}
     dev: true
 
-  /@code-judge/api@0.1.31(typescript@5.2.2):
-    resolution: {integrity: sha512-ZUNEHf/qMDjk8k9DQNcvzKHsg371HjVTHQXdmE0fotnSFtzg74yP49sOwVaQB6Rq0eMlGRHAzIUFQjpiQwIN0A==}
+  /@code-judge/api@0.1.33(typescript@5.2.2):
+    resolution: {integrity: sha512-kbixbx/uXckSdtO7067zfh4T39J9+2vrZVL9iXPk/hfF7Su/FZwH/3GiuAqwDjpXY/ijiQPcpHgsJ9B9n1Ispg==}
     dependencies:
       '@nestia/fetcher': 1.6.7(typescript@5.2.2)
     transitivePeerDependencies:
@@ -720,8 +729,20 @@ packages:
     resolution: {integrity: sha512-trNJ/vtMZYMLhfN45uLq4ShQSw0/S7xCTLLVM+WM1rmFpba/VS42jVUgaO3w/NOLiWR/09lnYk0yMaA/atdIsg==}
     dev: true
 
+  /@types/node@20.10.5:
+    resolution: {integrity: sha512-nNPsNE65wjMxEKI93yOP+NPGGBJz/PoN3kZsVLee0XMiJolxSekEVD8wRwBUBqkwc7UWop0edW50yrCQW4CyRw==}
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
   /@types/pako@2.0.3:
     resolution: {integrity: sha512-bq0hMV9opAcrmE0Byyo0fY3Ew4tgOevJmQ9grUhpXQhYfyLJ1Kqg3P33JT5fdbT2AjeAjR51zqqVjAL/HMkx7Q==}
+    dev: true
+
+  /@types/papaparse@5.3.14:
+    resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
+    dependencies:
+      '@types/node': 20.10.5
     dev: true
 
   /@types/pug@2.0.6:
@@ -791,6 +812,10 @@ packages:
       postcss: 8.4.29
       postcss-value-parser: 4.2.0
     dev: true
+
+  /autosize@6.0.1:
+    resolution: {integrity: sha512-f86EjiUKE6Xvczc4ioP1JBlWG7FKrE13qe/DxBCpe8GCipCq2nFw73aO8QEBKHfSbYGDN5eB9jXWKen7tspDqQ==}
+    dev: false
 
   /axobject-query@3.2.1:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
@@ -1419,6 +1444,10 @@ packages:
     resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
     dev: false
 
+  /papaparse@5.4.1:
+    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
+    dev: false
+
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -1731,6 +1760,12 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
+  /svelte-autosize@1.1.0:
+    resolution: {integrity: sha512-CPHq/K0ssrwuHBxFCCOtpWtXZwk4edjEIZ2mJT4KKzjSBq+CO9nOmstjpOh5TpoOf/4MtDcwAwnWmktqANjU6A==}
+    dependencies:
+      autosize: 6.0.1
+    dev: false
+
   /svelte-check@3.5.1(postcss@8.4.29)(sass@1.66.1)(svelte@4.2.0):
     resolution: {integrity: sha512-+Zb4iHxAhdUtcUg/WJPRjlS1RJalIsWAe9Mz6G1zyznSs7dDkT7VUBdXc3q7Iwg49O/VrZgyJRvOJkjuBfKjFA==}
     hasBin: true
@@ -1962,6 +1997,10 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  /undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    dev: true
 
   /undici@5.23.0:
     resolution: {integrity: sha512-1D7w+fvRsqlQ9GscLBwcAJinqcZGHUKjbOmXdlE/v8BvEGXjeWAax+341q44EuTcHXXnfyKNbKRq4Lg7OzhMmg==}

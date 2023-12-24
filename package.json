@@ -15,7 +15,7 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
-    "@code-judge/api": "^0.1.31",
+    "@code-judge/api": "^0.1.33",
     "@codemirror/lang-cpp": "^6.0.2",
     "@codemirror/lang-java": "^6.0.1",
     "@codemirror/lang-markdown": "^6.2.0",
@@ -31,8 +31,10 @@
     "marked-highlight": "^2.0.5",
     "moment": "^2.29.4",
     "pako": "^2.1.0",
+    "papaparse": "^5.4.1",
     "rxjs": "^7.8.1",
     "socket.io-client": "^4.7.2",
+    "svelte-autosize": "^1.1.0",
     "svelte-codemirror-editor": "^1.1.0",
     "svelte-french-toast": "^1.2.0",
     "svelte-local-storage-store": "^0.6.0",
@@ -48,6 +50,7 @@
     "@sveltejs/kit": "^1.20.4",
     "@types/lodash": "^4.14.198",
     "@types/pako": "^2.0.3",
+    "@types/papaparse": "^5.3.14",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
     "prettier": "^2.8.0",
