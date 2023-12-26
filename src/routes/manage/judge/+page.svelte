@@ -12,6 +12,7 @@
 
   import Papa from 'papaparse';
   import moment from 'moment';
+  import type { Language } from '../../../lib/language';
 
   let ids = '';
 
@@ -60,41 +61,45 @@
     searchResult = {};
   }
 
+  async function run(
+    submit: api.functional.submit.manage.manageList.Output['submits'][number],
+  ) {
+    return api.functional.submit.manage.judge
+      .manageJudge(getConnection(), {
+        problemId: submit.problem.id,
+        code: submit.code,
+        language: submit.language,
+        inputId: 'public',
+      })
+      .then(({ result }) => ({
+        submitId: submit.id,
+        type: result.type,
+        result: result.type === 'COMPLETE' ? result.result.type : '',
+        problemId: submit.problem.id,
+        problemName: submit.problem.name,
+        userId: submit.user.id,
+        userName: submit.user.name,
+        ...(result.type === 'COMPLETE' && result.result.type === 'SUCCESS'
+          ? {
+              time: `${result.result.time}ms`,
+              memory: filesize(result.result.memory),
+            }
+          : {
+              time: '',
+              memory: '',
+            }),
+      }));
+  }
+
   async function runAll() {
     running = true;
     total = Object.keys(searchResult).length;
-    const result = await Promise.all(
-      Object.values(searchResult).map(async (submit) => {
-        const result = await api.functional.submit.manage.judge
-          .manageJudge(getConnection(), {
-            problemId: submit.problem.id,
-            code: submit.code,
-            language: submit.language,
-            inputId: 'public',
-          })
-          .then(({ result }) => ({
-            submitId: submit.id,
-            type: result.type,
-            result: result.type === 'COMPLETE' ? result.result.type : '',
-            problemId: submit.problem.id,
-            problemName: submit.problem.name,
-            userId: submit.user.id,
-            userName: submit.user.name,
-            ...(result.type === 'COMPLETE' && result.result.type === 'SUCCESS'
-              ? {
-                  time: `${result.result.time}ms`,
-                  memory: filesize(result.result.memory),
-                }
-              : {
-                  time: '',
-                  memory: '',
-                }),
-          }));
 
-        complete += 1;
-        return result;
-      }),
-    );
+    const result: Awaited<ReturnType<typeof run>>[] = [];
+    for (const submit of Object.values(searchResult)) {
+      result.push(await run(submit));
+      complete += 1;
+    }
 
     const csvString = Papa.unparse(result, { header: true });
     const element = document.createElement('a');
