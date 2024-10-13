@@ -16,7 +16,7 @@ function addBearerPrefix(token: string | undefined | null) {
 }
 
 export function getConnection(noAuthorization?: boolean): api.IConnection {
-  const host = dev ? 'http://localhost:3000' : 'https://api.code.icnlab.dev';
+  const host = dev ? 'http://localhost:3000' : 'https://api.algorithm.icnlab.dev';
   const token = get(loginToken);
   return {
     host,
