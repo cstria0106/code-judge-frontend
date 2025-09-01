@@ -1,8 +1,9 @@
+import { dev } from '$app/environment';
+import { PUBLIC_API_URL } from '$env/static/public';
 import type api from '@code-judge/api';
 import { get } from 'svelte/store';
 import { loginToken } from './store';
 import type { WebsocketConnection } from './websocket';
-import { dev } from '$app/environment';
 
 export type User = {
   id: string;
@@ -16,7 +17,7 @@ function addBearerPrefix(token: string | undefined | null) {
 }
 
 export function getConnection(noAuthorization?: boolean): api.IConnection {
-  const host = dev ? 'http://localhost:3000' : 'https://api.algorithm.icnlab.dev';
+  const host = dev ? 'http://localhost:3000' : PUBLIC_API_URL;
   const token = get(loginToken);
   return {
     host,
