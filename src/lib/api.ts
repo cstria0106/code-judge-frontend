@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { PUBLIC_API_URL } from '$env/static/public';
+import { PUBLIC_API_HOST } from '$env/static/public';
 import type api from '@code-judge/api';
 import { get } from 'svelte/store';
 import { loginToken } from './store';
@@ -17,7 +17,7 @@ function addBearerPrefix(token: string | undefined | null) {
 }
 
 export function getConnection(noAuthorization?: boolean): api.IConnection {
-  const host = dev ? 'http://localhost:3000' : PUBLIC_API_URL;
+  const host = dev ? 'http://localhost:3000' : `https://${PUBLIC_API_HOST}`;
   const token = get(loginToken);
   return {
     host,
@@ -32,7 +32,7 @@ export function getConnection(noAuthorization?: boolean): api.IConnection {
 export function getWebsocketConnection(
   noAuthorization?: boolean,
 ): WebsocketConnection {
-  const host = dev ? 'ws://localhost:3000' : 'wss://api.algorithm.icnlab.dev';
+  const host = dev ? 'ws://localhost:3000' : `wss://${PUBLIC_API_HOST}`;
   const token = get(loginToken);
   return {
     host,
